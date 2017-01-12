@@ -124,7 +124,7 @@ function initMap() {
     bounds.extend(marker.position); //Extends the map to include all markers.
     marker.addListener("click", function() { //Sets click listner for markers.
     //Encapsulate each marker with f that sets its infowindow.
-    populateInfoWindow(this, largeInfoWindow, contentString);
+    populateInfoWindow(this, largeInfoWindow);
     });
   }
   map.fitBounds(bounds); //GoolgeMap f that invokes the fitBounds.
@@ -132,7 +132,7 @@ function initMap() {
 
 //Encapsulates each marker with a unique info according to each location.
 //Passes along the marker itself, an instance of the inforWindow and content.
-function populateInfoWindow(marker, infoWindow, contentString) {
+function populateInfoWindow(marker, infoWindow) {
   if (infoWindow.marker != marker) { //Checks if infoWindowis not open.
     infoWindow.marker = marker;
     infoWindow.setContent("<div>" + marker.title + "</div>"); //Sets name.

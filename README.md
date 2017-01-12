@@ -1,12 +1,12 @@
-Neighborhood Map Project
-Frontend Nanodegree
-#Introduction
+#Neighborhood Map Project
+##Frontend Nanodegree
+###Introduction
 This app's function is to create a map where we predefined markers around
 a selected area. I have chosen New Zealand as my area and marked tourist spots
 as my point of interests because I am planning to have a vacation there one
 of these days.
 
-#Getting Started
+###Getting Started
 **Prepare your files.** I have prepared a standard file folder setup where I
 separate my files according to js, css, img on their own respective folders.
 
@@ -17,14 +17,14 @@ to kickoff the coding madness.
 my project folder. Made my initial commit and connected my local to my github
 account.
 
-#Setup the Map
+###Setup the Map
 The first thing I did is to make sure that map appears. I practiced by not
 relying on the examples that I have made. Instead, I will be referring to the
 documentation that Google made on their MAP API documentation page. Followed
 the instructions and replicated their basic example on my project. The code
 and documentation can be found in this [link](https://developers.google.com/maps/documentation/javascript/tutorial).
 
-#Making the List
+###Making the List
 I figured that it would be great to make the list function on top of the map
 and work my way through the rest of the details later. Research the tourist
 spots in New Zealand and started with them as my points or items on my list
@@ -80,7 +80,7 @@ for matches and pushes these items on the same observableArray.
 viewModel.query.subscribe(viewModel.search);
 ```
 
-#Plot the Markers on the Map
+###Plot the Markers on the Map
 I have the list and live search working. Now, it's time to create markers on
 map. I first modify my locationsData to include LatLng coordinates of the
 places that I want to feature on my map.

@@ -52,13 +52,13 @@ viewModel.init();
 updates. Found hinchley's git repo of his version of
 [knockout live search](https://gist.github.com/hinchley/5973926).
 Basically, we use a query property to notify our viewModel that a search
-activity is being conducted, which in turn searhes through our locations
+activity is being conducted, which in turn searches through our locations
 for matches and pushes these items on the same observableArray.
 
 ```javascript
   //Creates an observableArray, which is data-bind on my html.
   locations: ko.observableArray([]),
-  //query is data-bind on our html and everytime it is updated or when we do a
+  //query is data-bind on our html and every time it is updated or when we do a
   //search, it will notify our list to update.
   query: ko.observable(''),
   //When invoked, it will clear all items on the list and uses query to display
@@ -100,7 +100,7 @@ within the bounds of the initial state of the map. We customize each marker
 with its own unique name, content and more by creating encapsulating functions.
 
 ```javascript
-  var defaultIcon = makeMarkerIcon("0091ff"); //Default colot of the icon.
+  var defaultIcon = makeMarkerIcon("0091ff"); //Default color of the icon.
   var bounds = new google.maps.LatLngBounds(); //Let's us access the bounds f.
   var largeInfoWindow = new google.maps.InfoWindow(); //Creates an instance.
 
@@ -114,12 +114,12 @@ with its own unique name, content and more by creating encapsulating functions.
       title: title, //Sets the name.
       animation: google.maps.Animation.DROP, //Animates entrance of markers.
       icon: defaultIcon, //Sets the color of each icon.
-      id: i //Sets the id of each marker correspoding the index of the markers.
+      id: i //Sets the id of each marker corresponding the index of the markers.
     });
 
     markers.push(marker); //Pushes each marker to our markers array.
     bounds.extend(marker.position); //Extends the map to include all markers.
-    marker.addListener("click", function() { //Sets click listner for markers.
+    marker.addListener("click", function() { //Sets click listener for markers.
     //Encapsulate each marker with f that sets its infowindow.
     populateInfoWindow(this, largeInfoWindow, contentString);
     });
@@ -152,5 +152,38 @@ function makeMarkerIcon(markerColor) {
   );
 
   return markerImage;
+}
+```
+
+**Active Search Markers.** As search is executed, markers are filtered according
+to the current query. I added an attribute on the locationsData array and link
+the search query parallel to the markers array. setAllMap() function checks for
+Boolean visible on each marker and determines which marker is to be hidden.
+
+```javascript
+search: function(value) {
+  viewModel.locations.removeAll(); //Removes all items on locations.
+  //Uses query to search on locationsData and pushes the items that match to
+  //the observableArray locations.
+  for (var i = 0; i < locationsData.length; i++) {
+    if (locationsData[i].title.toLowerCase().indexOf(value.toLowerCase()) >=0) {
+      viewModel.locations.push(locationsData[i]);
+        markers[i].visible = true;
+      } else {
+        markers[i].visible = false;
+      }
+  }
+  setAllMap();
+}
+};
+
+//Hides Markers not part of the current search query
+function setAllMap() {
+for (var i = 0; i < markers.length; i++) {
+  if (markers[i].visible === false) {
+    markers[i].setMap(null);
+  } else {
+    markers[i].setMap(map);
+  }
 }
 ```

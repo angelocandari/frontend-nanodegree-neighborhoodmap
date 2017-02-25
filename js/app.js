@@ -3,47 +3,58 @@
 var locationsData = [
   {
     title: "Wellington",
-    location: {lat:  -41.28646, lng: 174.776236}
+    location: {lat:  -41.28646, lng: 174.776236},
+    visible: true
   },
   {
     title: "Queenstown",
-    location: {lat: -45.031162, lng: 168.662644}
+    location: {lat: -45.031162, lng: 168.662644},
+    visible: true
   },
   {
     title: "Milford Sound",
-    location: {lat: -44.641402, lng: 167.89738}
+    location: {lat: -44.641402, lng: 167.89738},
+    visible: true
   },
   {
     title: "Rotorua",
-    location: {lat: -38.136848, lng: 176.249746}
+    location: {lat: -38.136848, lng: 176.249746},
+    visible: true
   },
   {
     title: "Cathedral Cove",
-    location: {lat:  -36.827535, lng: 175.790346}
+    location: {lat:  -36.827535, lng: 175.790346},
+    visible: true
   },
   {
     title: "Abel Tasman",
-    location: {lat: -40.934685, lng: 172.972155}
+    location: {lat: -40.934685, lng: 172.972155},
+    visible: true
   },
   {
     title: "Hobbiton",
-    location: {lat: -37.87209, lng: 175.68291}
+    location: {lat: -37.87209, lng: 175.68291},
+    visible: true
   },
   {
     title: "Waiheke Island",
-    location: {lat: -36.801924, lng: 175.108015}
+    location: {lat: -36.801924, lng: 175.108015},
+    visible: true
   },
   {
     title: "Mount Maunganui",
-    location: {lat: -37.638654, lng: 176.183627}
+    location: {lat: -37.638654, lng: 176.183627},
+    visible: true
   },
   {
     title: "Hokitika Gorge",
-    location: {lat: -42.955582, lng: 171.016703}
+    location: {lat: -42.955582, lng: 171.016703},
+    visible: true
   },
   {
     title: "Cape Palliser",
-    location: {lat: -41.611904, lng: 175.290124}
+    location: {lat: -41.611904, lng: 175.290124},
+    visible: true
   }
 ];
 
@@ -72,7 +83,22 @@ var viewModel = {
     for (var i = 0; i < locationsData.length; i++) {
       if (locationsData[i].title.toLowerCase().indexOf(value.toLowerCase()) >=0) {
         viewModel.locations.push(locationsData[i]);
-      }
+          markers[i].visible = true;
+        } else {
+          markers[i].visible = false;
+        }
+    }
+    setAllMap();
+  }
+};
+
+//Hides Markers not part of the current search query
+function setAllMap() {
+  for (var i = 0; i < markers.length; i++) {
+    if (markers[i].visible === false) {
+      markers[i].setMap(null);
+    } else {
+      markers[i].setMap(map);
     }
   }
 };
@@ -111,10 +137,12 @@ function initMap() {
   for (var i = 0; i < locationsData.length; i++) {
     var position = locationsData[i].location; //LatLng coordinates.
     var title = locationsData[i].title; //Name of each location.
+    var visible = locationsData[i].visible;
     var marker = new google.maps.Marker({ //New marker instance.
       map: map, //Sets the map to be used.
       position: position, //Sets the coordinates.
       title: title, //Sets the name.
+      visible: visible, //Boolean to check if it should be visible.
       animation: google.maps.Animation.DROP, //Animates entrance of markers.
       icon: defaultIcon, //Sets the color of each icon.
       id: i //Sets the id of each marker correspoding the index of the markers.

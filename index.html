@@ -16,7 +16,6 @@
     </style>
     <link rel="stylesheet" href="css/master.css">
   </head>
-
   <body>
     <div class="main">
       <!--List of locations that can be searchable-->
@@ -25,7 +24,7 @@
 
         <div>
           <input id="search-location" type="search" placeholder="Search here"
-          data-bind="value: query, valueUpdate: 'keyup'" autocomplete="off">
+          data-bind="value: currentQuery, valueUpdate: 'keyup'" autocomplete="off">
         </div>
         <hr>
         <!-- forEach iterates through each object with "locationList"
@@ -37,12 +36,11 @@
       </div>
       <div id="map"></div>
     </div>
-
+    <script src="js/lib/jquery.min.js"></script>
     <script src="js/lib/knockout-3.2.0.js"></script>
     <script src="js/app.js"></script>
-    <!-- Google Map API. Callback function initMap found in js/app.js -->
     <script async defer
-     src="https://maps.googleapis.com/maps/api/js?libraries=places,drawing,geometry&key=AIzaSyClAt5xhwZuJPnyne-RPxXOJPIgu1Hme_o&v=3&callback=initMap">
-    </script>
+     src="https://maps.googleapis.com/maps/api/js?libraries=places,drawing,geometry&key=AIzaSyClAt5xhwZuJPnyne-RPxXOJPIgu1Hme_o&v=3&callback=viewModel.init">
+    </script> <!-- Google Map API. Callback function initMap found in js/app.js -->
   </body>
 </html>

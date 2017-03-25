@@ -9,7 +9,7 @@
       #map {
         bottom:0px;
         height: 100%;
-        left: 362px;
+        left: 200px;
         position: absolute;
         right: 0px;
       }
@@ -24,14 +24,14 @@
 
         <div>
           <input id="search-location" type="search" placeholder="Search here"
-          data-bind="value: currentQuery, valueUpdate: 'keyup'" autocomplete="off">
+          data-bind="value: currentQuery, valueUpdate: 'input'" autocomplete="off">
         </div>
         <hr>
         <!-- forEach iterates through each object with "locationList"
         observableArray and creates a new li for each object.-->
         <ul data-bind="foreach: locations">
           <!-- Uses the name in the locations array to label each item. -->
-          <li data-bind="text: title"></li>
+          <li data-bind="text: title, click: $parent.setMarker.bind($data, $index())"></li>
         </ul>
       </div>
       <div id="map"></div>

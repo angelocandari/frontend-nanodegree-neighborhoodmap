@@ -161,7 +161,7 @@ the search query parallel to the markers array. setAllMap() function checks for
 Boolean visible on each marker and determines which marker is to be hidden.
 
 ```javascript
-search: function(value) {
+search: function(value) { //synchronizes the list and markers.
   viewModel.locations.removeAll(); //Removes all items on locations.
   //Uses query to search on locationsData and pushes the items that match to
   //the observableArray locations.
@@ -174,16 +174,26 @@ search: function(value) {
       }
   }
   setAllMap();
-}
 };
 
-//Hides Markers not part of the current search query
-function setAllMap() {
-for (var i = 0; i < markers.length; i++) {
-  if (markers[i].visible === false) {
-    markers[i].setMap(null);
-  } else {
-    markers[i].setMap(map);
+function setAllMap() { //Hides Markers not part of the current search query
+  for (var i = 0; i < markers.length; i++) {
+    if (markers[i].visible === false) {
+      markers[i].setMap(null);
+    } else {
+      markers[i].setMap(map);
+    }
   }
 }
+```
+
+**Link List and Markers.** To synchronize each action of the list of places and
+markers, I use the index of each of their own array as the common denominator.
+
+```javascript
+setMarker: function(id) {
+  var currentMarker = model.markers[id];
+  viewModel.toggleBounce(currentMarker);
+  viewModel.populateInfoWindow(currentMarker, viewModel.infoWindow);
+},
 ```

@@ -8,7 +8,7 @@ var model = { //All of my point of interests in New Zealand vacation spots.
       visible: true
     },
     {
-      title: "Queenstown",
+      title: "Queenstown, New Zealand",
       location: {lat: -45.031162, lng: 168.662644},
       visible: true
     },
@@ -33,7 +33,7 @@ var model = { //All of my point of interests in New Zealand vacation spots.
       visible: true
     },
     {
-      title: "Hobbiton",
+      title: "Hobbiton Movie Set",
       location: {lat: -37.87209, lng: 175.68291},
       visible: true
     },
@@ -56,19 +56,20 @@ var model = { //All of my point of interests in New Zealand vacation spots.
 };
 
 var viewModel = { //viewModel is the command center between model and view.
-  init: function() {
+  init: function() { //initial state of viewModel
     for (var i = 0; i < model.locationsData.length; i++) {
-      viewModel.locations.push(model.locationsData[i]);
+      this.locations.push(model.locationsData[i]);
     }
-    viewModel.currentQuery.subscribe(viewModel.search); //Invokes search.
+    this.currentQuery.subscribe(this.search); //Invokes search.
     mapView.init();
   },
   currentQuery: ko.observable(''), //notifies list to update.
   locations: ko.observableArray([]),  //Creates an observableArray data-bound.
-  createMarkers: function() {
-    var defaultIcon = viewModel.makeMarkerIcon("0091ff"); //Default colot of the icon.
+  createMarkers: function() { //Creates each Markers.
+    var defaultIcon = this.makeMarkerIcon("0091ff"); //Default colot of the icon.
     var bounds = new google.maps.LatLngBounds(); //Let's us access the bounds f.
-    var largeInfoWindow = new google.maps.InfoWindow(); //Creates an instance.
+    var infoWindow = new google.maps.InfoWindow(); //Creates an instance.
+    this.infoWindow = infoWindow; //Adds infoWindow as a property of viewModel
     for (var i = 0; i < model.locationsData.length; i++) {
       var position = model.locationsData[i].location; //LatLng coordinates.
       var title = model.locationsData[i].title; //Name of each location.
@@ -82,17 +83,26 @@ var viewModel = { //viewModel is the command center between model and view.
         icon: defaultIcon, //Sets the color of each icon.
         id: i //Sets the id of each marker correspoding the index of the markers.
       });
-
       model.markers.push(marker); //Pushes each marker to our markers array.
       bounds.extend(marker.position); //Extends the map to include all markers.
-      viewModel.wikisearch(title); //adds wiki details on markers.
       marker.addListener("click", function() { //Sets click listner for markers.
-      viewModel.populateInfoWindow(this, largeInfoWindow); //our infowindow.
+        viewModel.populateInfoWindow(this, viewModel.infoWindow); //our infowindow.
+        viewModel.toggleBounce(this);
       });
     }
     model.map.fitBounds(bounds); //GoolgeMap f that invokes the fitBounds.
   },
-  search: function(value) {
+  toggleBounce: function(marker) { //marker bounces when clicked
+    if (marker.getAnimation() !== null) {
+      marker.setAnimation(null);
+    } else {
+      marker.setAnimation(google.maps.Animation.BOUNCE);
+      setTimeout(function () { //marker bounces once when clicked.
+          marker.setAnimation(null);
+      }, 1400);
+    }
+  },
+  search: function(value) { //initiates search using currentQuery.
     viewModel.locations.removeAll(); //Removes all items on locations.
     for (var i = 0; i < model.locationsData.length; i++) {
       if (model.locationsData[i].title.toLowerCase().indexOf(value.toLowerCase()) >=0) {
@@ -104,17 +114,10 @@ var viewModel = { //viewModel is the command center between model and view.
     }
     viewModel.setAllMap();
   },
-  wikisearch: function(title) { //loads the data for wikipedia searches
-    var wikiUrl = 'http://en.wikipedia.org/w/api.php?action=opensearch&search='
-    + title + '&format=json&callback=wikiCallback';
-
-    $.ajax({
-      url: wikiUrl,
-      dataType: "jsonp",
-      success: function(response) {
-        var titleDesc = response[2][0];
-      }
-    })
+  setMarker: function(id) { //synchronizes the list and markers.
+    var currentMarker = model.markers[id];
+    viewModel.toggleBounce(currentMarker);
+    viewModel.populateInfoWindow(currentMarker, viewModel.infoWindow);
   },
   setAllMap: function () { //Hides Markers not part of the current search query
     for (var i = 0; i < model.markers.length; i++) {
@@ -125,8 +128,7 @@ var viewModel = { //viewModel is the command center between model and view.
       }
     }
   },
-  //Customizes the look of your icon. Passes along the color. See defaultIcon.
-  makeMarkerIcon: function (markerColor) {
+  makeMarkerIcon: function (markerColor) { //Customizes marker icons.
     var markerImage = new google.maps.MarkerImage(
       'http://chart.googleapis.com/chart?chst=d_map_spin&chld=1.15|0|'+ markerColor +
       '|40|_|%E2%80%A2',
@@ -138,15 +140,34 @@ var viewModel = { //viewModel is the command center between model and view.
 
     return markerImage;
   },
-  //Encapsulates each marker with a unique info according to each location.
-  populateInfoWindow: function (marker, infoWindow) {
+  populateInfoWindow: function (marker, infoWindow) { //Creates the infoWindow.
     if (infoWindow.marker != marker) { //Checks if infoWindow is not open.
       infoWindow.marker = marker;
-      infoWindow.setContent("<div>" + marker.title + "</div>"); //Sets name.
-      infoWindow.open(model.map, marker); //Opens the marker.
-      infoWindow.addListener("closeclick", function(){ //Listener to close info.
-        infoWindow.setMarker(null); //Clears the content on infoWindow.
-      })
+      var titleMark = marker.title;
+      var wikiUrl = 'http://en.wikipedia.org/w/api.php?action=opensearch&search='
+      + titleMark + '&format=json&callback=wikiCallback';
+
+      $.ajax({
+        url:wikiUrl,
+        dataType:"jsonp",
+        success: function(response) {
+          var contentMark;
+          if (response[2][0] === "") {
+            contentMark = response[2][1]
+          } else {
+            contentMark = response[2][0]
+          };
+          infoWindow.setContent(
+            "<div>" +
+            "<h1>" + titleMark + "</h1>" +
+            "<p>" + contentMark + "</p>" +
+            "</div>"); //Sets name.
+            infoWindow.open(model.map, marker); //Opens the marker.
+            infoWindow.addListener("closeclick", function(){ //Listener to close info.
+              infoWindow.close(); //closes infoWindow.
+          })
+        }
+      });
     }
   }
 };

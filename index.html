@@ -8,23 +8,23 @@
     <link rel="stylesheet" href="css/master.css">
   </head>
   <body>
-    <div id="drawer">
-      <a href="javascript:void(0)" class="closebtn" onclick="closeNav()">&times;</a>      <h1>My New Zealand Vacation</h1>
-      <input id="search-location" type="search" placeholder="Search here"
-        data-bind="value: currentQuery, valueUpdate: 'input'" autocomplete="off">
-
-      <ul class="list" data-bind="foreach: locations">
-        <li data-bind="text: title, click: $parent.setMarker.bind($data, $index())"></li>
-      </ul>
-    </div>
-
-
     <div id="main">
-      <span class="open" onclick="openNav()">&#9776; open</span>
+      <div class="header">
+        <span class="open" data-bind="click: handle">&#9776;</span>
+      </div>
       <div id="map"></div>
 
     </div>
 
+    <div id="drawer">
+      <h1>New Zealand Vacation</h1>
+      <input id="search-location" type="search" placeholder="Search here"
+        data-bind="value: currentQuery, valueUpdate: 'input'" autocomplete="off">
+
+      <ul class="list" data-bind="foreach: locations">
+        <li data-bind="text: title, click: $parent.setMarker.bind($data, id)"></li>
+      </ul>
+    </div>
     <script src="js/lib/jquery.min.js"></script>
     <script src="js/lib/knockout-3.2.0.js"></script>
     <script src="js/app.js"></script>

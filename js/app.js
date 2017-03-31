@@ -1,55 +1,41 @@
 var model = { //All of my point of interests in New Zealand vacation spots.
+  handle: false,
   map: map,
   markers: [], //Array for my markers on the map.
   locationsData: [
     {
-      title: "Wellington",
-      location: {lat: -41.28646, lng: 174.776236},
+      title: "Conical Hill",
+      location: {lat: -44.72176745520409, lng: 168.1689782763381},
       visible: true
     },
     {
-      title: "Queenstown, New Zealand",
-      location: {lat: -45.031162, lng: 168.662644},
+      title: "Milford Track",
+      location: {lat: -44.79809732434852, lng: 167.7328965607436},
       visible: true
     },
     {
-      title: "Milford Sound",
-      location: {lat: -44.641402, lng: 167.89738},
+      title: "Lake Waikaremoana Great Walk",
+      location: {lat: -38.7949287108687, lng: 177.0689693625423},
       visible: true
     },
     {
-      title: "Rotorua",
-      location: {lat: -38.136848, lng: 176.249746},
+      title: "Heaphy Track",
+      location: {lat: -40.89122674827306, lng: 172.3513547959291},
       visible: true
     },
     {
-      title: "Cathedral Cove",
-      location: {lat:  -36.827535, lng: 175.790346},
+      title: "Abel Tasman National Park",
+      location: {lat: -40.92882273256802, lng: 173.048605932678},
       visible: true
     },
     {
-      title: "Abel Tasman",
-      location: {lat: -40.934685, lng: 172.972155},
+      title: "Rakiura Track",
+      location: {lat: -46.86303053044409, lng: 168.1232043940779},
       visible: true
     },
     {
-      title: "Hobbiton Movie Set",
-      location: {lat: -37.87209, lng: 175.68291},
-      visible: true
-    },
-    {
-      title: "Waiheke Island",
-      location: {lat: -36.801924, lng: 175.108015},
-      visible: true
-    },
-    {
-      title: "Mount Maunganui",
-      location: {lat: -37.638654, lng: 176.183627},
-      visible: true
-    },
-    {
-      title: "Cape Palliser",
-      location: {lat: -41.611904, lng: 175.290124},
+      title: "Kepler Track Great Walk",
+      location: {lat: -45.38615421131598, lng: 167.5905132201441},
       visible: true
     }
   ]
@@ -58,10 +44,12 @@ var model = { //All of my point of interests in New Zealand vacation spots.
 var viewModel = { //viewModel is the command center between model and view.
   init: function() { //initial state of viewModel
     for (var i = 0; i < model.locationsData.length; i++) {
+      model.locationsData[i].id = i;
       viewModel.locations.push(model.locationsData[i]);
     }
     viewModel.currentQuery.subscribe(viewModel.search); //Invokes search.
-    mapView.init();
+    viewModel.initMap();
+    viewModel.createMarkers();
   },
   currentQuery: ko.observable(""), //notifies list to update.
   locations: ko.observableArray([]), //Creates an observableArray data-bound.
@@ -145,8 +133,13 @@ var viewModel = { //viewModel is the command center between model and view.
     if (infoWindow.marker != marker) { //Checks if infoWindow is not open.
       infoWindow.marker = marker;
       var titleMark = marker.title;
+      var markerLat = marker.getPosition().lat();
+      var markerLng = marker.getPosition().lng();
+      var markerCoor = markerLat + "," + markerLng;
       var wikiUrl = 'http://en.wikipedia.org/w/api.php?action=opensearch&search='
       + titleMark + '&format=json&callback=wikiCallback';
+      var streetView = "http://maps.googleapis.com/maps/api/streetview?size=600x300&location="
+      + markerCoor;
 
       $.ajax({
         url:wikiUrl,
@@ -160,8 +153,10 @@ var viewModel = { //viewModel is the command center between model and view.
           };
           infoWindow.setContent(
             "<div>" +
-            "<h1>" + titleMark + "</h1>" +
+            "<h2>" + titleMark + "</h2>" +
+            '<img src="' + streetView + '">' +
             "<p>" + contentMark + "</p>" +
+            "<p>" + "Content from Wikipedia" + "</p>" +
             "</div>"); //Sets name.
             infoWindow.open(model.map, marker); //Opens the marker.
             infoWindow.addListener("closeclick", function(){ //Listener to close info.
@@ -170,23 +165,26 @@ var viewModel = { //viewModel is the command center between model and view.
         }
       });
     }
-  }
-};
+  },
+  handle: function(){
+    var drawer = document.getElementById("drawer");
+    var main = document.getElementById("main");
+    if (model.handle === true) {
+      model.handle = false;
+      drawer.style.width = "300px";
+      main.style.marginLeft = "300px";
+    } else {
+      model.handle = true;
 
-function openNav() {
-  document.getElementById("drawer").style.width = "250px";
-  document.getElementById("main").style.marginLeft = "250px";
-}
+      drawer.style.width = "0";
+      main.style.marginLeft = "0";
+    }
 
-function closeNav() {
-  document.getElementById("drawer").style.width = "0";
-  document.getElementById("main").style.marginLeft = "0";
-
-}
-
-
-var mapView = { //mapView
-  init: function() {
+    setTimeout(function () { //marker bounces once when clicked.
+      google.maps.event.trigger(model.map, 'resize');
+    }, 700);
+  },
+  initMap: function() {
     var originalCenter = model.locationsData[0].location;
     model.map = new google.maps.Map(document.getElementById('map'), {
       center: {lat: -40.900557, lng: 174.885971}, // Centers at New Zealand.
@@ -194,11 +192,6 @@ var mapView = { //mapView
       center: originalCenter, //Centers to the first item on my locationsData
       mapTypeControl: false
     })
-    this.render();
-  },
-
-  render: function(){
-    viewModel.createMarkers();
   }
 };
 

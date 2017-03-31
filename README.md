@@ -190,6 +190,7 @@ function setAllMap() { //Hides Markers not part of the current search query
 **Link List and Markers.** To synchronize each action of the list of places and
 markers, I use the index of each of their own array as the common denominator.
 
+
 ```javascript
 setMarker: function(id) {
   var currentMarker = model.markers[id];
@@ -197,3 +198,9 @@ setMarker: function(id) {
   viewModel.populateInfoWindow(currentMarker, viewModel.infoWindow);
 },
 ```
+
+**Added OffCanvas Menu.** Placed my list on an OffCanvasmenu. w3schools has a great and simple tutorial [here](https://www.w3schools.com/howto/howto_js_off-canvas.asp).
+
+
+**Infowindow Content Reference.** Added Streetview images and Wikipedia Content
+ on the corresponding places on Infowindow.

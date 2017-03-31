@@ -7,81 +7,78 @@ html, body, main {
 }
 
 h1 {
-  color: white;
+  color: #DE9358;
   font-size: 20px;
-  margin: 20px;
+  padding: 10px 20px;
+  margin: 0px;
+}
+
+h2 {
+  color: #DE9358;
+  font-size: 20px;
+  padding: 10px 0px;
+  margin: 0px;
 }
 
 #drawer {
   height: 100%;
-  width: 0;
+  width: 300px;
   position: fixed;
   z-index: 1;
   top: 0;
   left: 0;
-  background-color: #111;
+  background-color: #2B303B;
   overflow-x: hidden;
-  padding-top: 60px;
+  padding: 0px;
   transition: 0.5s;
 }
 
 .list {
-  padding: 0;
+  padding-left: 20px;
+  margin: 0;
 }
 
 .list li {
   cursor: pointer;
-  padding: 8px 8px 8px 32px;
+  padding: 8px 8px 8px 0px;
   text-decoration: none;
   font-size: 18px;
-  color: #818181;
+  color: #9faebf;
   display: block;
   transition: 0.3s;
 }
 
 .list li:hover, .offcanvas li:focus {
-  color: #f1f1f1;
+  color: #DE9358;
 }
 
-#drawer .closebtn {
-  position: absolute;
-  top: 0;
-  right: 25px;
-  font-size: 36px;
-  margin-left: 50px;
+#search-location {
+  margin: 10px 20px;
+}
+
+.header {
+  background: #1C1F26;
+  width: 100%;
+  height: 50px;
+  z-index: 2;
+
 }
 
 .open {
-  font-size:30px;
-  position: absolute;
-  z-index: 2;
+  color: #DE9358;
+  font-size: 30px;
   cursor: pointer;
+  padding: 20px;
 }
 
 #main {
   position: relative;
   transition: margin-left .5s;
   height: 100%;
+  margin-left: 300px;
 }
 
 #map {
   height: 100%;
   z-index: 1;
 }
-
-
-
-/*@media screen and (min-width: 600px) {
-  .list {
-    position: relative;
-    transform: translate(0, 0);
-  }
-  body {
-    display: flex;
-    flex-flow: row nowrap;
-  }
-  .site-wrap {
-    width: auto;
-    flex-grow: 1;
-  }
-}*/

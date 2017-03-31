@@ -50,6 +50,7 @@ var viewModel = { //viewModel is the command center between model and view.
     viewModel.currentQuery.subscribe(viewModel.search); //Invokes search.
     viewModel.initMap();
     viewModel.createMarkers();
+
   },
   currentQuery: ko.observable(""), //notifies list to update.
   locations: ko.observableArray([]), //Creates an observableArray data-bound.
@@ -132,6 +133,7 @@ var viewModel = { //viewModel is the command center between model and view.
   populateInfoWindow: function (marker, infoWindow) { //Creates the infoWindow.
     if (infoWindow.marker != marker) { //Checks if infoWindow is not open.
       infoWindow.marker = marker;
+      var $errorHandler = $("#error");
       var titleMark = marker.title;
       var markerLat = marker.getPosition().lat();
       var markerLng = marker.getPosition().lng();
@@ -140,6 +142,11 @@ var viewModel = { //viewModel is the command center between model and view.
       + titleMark + '&format=json&callback=wikiCallback';
       var streetView = "http://maps.googleapis.com/maps/api/streetview?size=600x300&location="
       + markerCoor;
+      var wikiTimeout = setTimeout(function(){
+        $errorHandler.text("Failed to load Resources");
+        alert("Failed to load Resources");
+
+      }, 8000);
 
       $.ajax({
         url:wikiUrl,
@@ -162,7 +169,10 @@ var viewModel = { //viewModel is the command center between model and view.
             infoWindow.addListener("closeclick", function(){ //Listener to close info.
               infoWindow.close(); //closes infoWindow.
           })
+          clearTimeout(wikiTimeout);
+
         }
+
       });
     }
   },
@@ -192,6 +202,10 @@ var viewModel = { //viewModel is the command center between model and view.
       center: originalCenter, //Centers to the first item on my locationsData
       mapTypeControl: false
     })
+  },
+  errHandle: function() {
+    var message = document.getElementById("error").innerHTML;
+    message = "err.message";
   }
 };
 

@@ -56,6 +56,13 @@ h2 {
   margin: 10px 20px;
 }
 
+#error {
+  color: white;
+  font-size: 20px;
+  color: #9faebf;
+
+}
+
 .header {
   background: #1C1F26;
   width: 100%;

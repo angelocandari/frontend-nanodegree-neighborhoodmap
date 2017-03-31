@@ -204,3 +204,13 @@ setMarker: function(id) {
 
 **Infowindow Content Reference.** Added Streetview images and Wikipedia Content
  on the corresponding places on Infowindow.
+
+**Error Handling.** Since I am using JSONP to get wikipedia searches and streetview images to populate infowindows, conventional error handlers would not be an option. As a work around, I have implemented setTimeout function on my ajax request. If a GET requests fails, an alert and a message will notify the user that something has gone wrong.
+
+```javascript
+var wikiTimeout = setTimeout(function(){
+  $errorHandler.text("Failed to load Resources");
+  alert("Failed to load Resources");
+
+}, 8000);
+```

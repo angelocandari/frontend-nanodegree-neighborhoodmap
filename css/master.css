@@ -1,19 +1,87 @@
-#map {
-
-}
-html,
-body {
+html, body, main {
   font-family: Arial, sans-serif;
   height: 100%;
+  width: 100%;
   margin: 0;
   padding: 0;
 }
-.container {
-  height: 100%;
-  position: relative;
-}
+
 h1 {
-  color: #525454;
+  color: white;
   font-size: 20px;
-  margin: 0 0 10px 0;
+  margin: 20px;
 }
+
+#drawer {
+  height: 100%;
+  width: 0;
+  position: fixed;
+  z-index: 1;
+  top: 0;
+  left: 0;
+  background-color: #111;
+  overflow-x: hidden;
+  padding-top: 60px;
+  transition: 0.5s;
+}
+
+.list {
+  padding: 0;
+}
+
+.list li {
+  cursor: pointer;
+  padding: 8px 8px 8px 32px;
+  text-decoration: none;
+  font-size: 18px;
+  color: #818181;
+  display: block;
+  transition: 0.3s;
+}
+
+.list li:hover, .offcanvas li:focus {
+  color: #f1f1f1;
+}
+
+#drawer .closebtn {
+  position: absolute;
+  top: 0;
+  right: 25px;
+  font-size: 36px;
+  margin-left: 50px;
+}
+
+.open {
+  font-size:30px;
+  position: absolute;
+  z-index: 2;
+  cursor: pointer;
+}
+
+#main {
+  position: relative;
+  transition: margin-left .5s;
+  height: 100%;
+}
+
+#map {
+  height: 100%;
+  z-index: 1;
+}
+
+
+
+/*@media screen and (min-width: 600px) {
+  .list {
+    position: relative;
+    transform: translate(0, 0);
+  }
+  body {
+    display: flex;
+    flex-flow: row nowrap;
+  }
+  .site-wrap {
+    width: auto;
+    flex-grow: 1;
+  }
+}*/

@@ -5,42 +5,32 @@
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <title>Frontend Nanodegree Neighborhood Map</title>
-    <style media="screen">
-      #map {
-        bottom:0px;
-        height: 100%;
-        left: 200px;
-        position: absolute;
-        right: 0px;
-      }
-    </style>
     <link rel="stylesheet" href="css/master.css">
   </head>
   <body>
-    <div class="main">
-      <!--List of locations that can be searchable-->
-      <div class="list">
-        <h1>My New Zealand Vacation</h1>
+    <div id="drawer">
+      <a href="javascript:void(0)" class="closebtn" onclick="closeNav()">&times;</a>      <h1>My New Zealand Vacation</h1>
+      <input id="search-location" type="search" placeholder="Search here"
+        data-bind="value: currentQuery, valueUpdate: 'input'" autocomplete="off">
 
-        <div>
-          <input id="search-location" type="search" placeholder="Search here"
-          data-bind="value: currentQuery, valueUpdate: 'input'" autocomplete="off">
-        </div>
-        <hr>
-        <!-- forEach iterates through each object with "locationList"
-        observableArray and creates a new li for each object.-->
-        <ul data-bind="foreach: locations">
-          <!-- Uses the name in the locations array to label each item. -->
-          <li data-bind="text: title, click: $parent.setMarker.bind($data, $index())"></li>
-        </ul>
-      </div>
-      <div id="map"></div>
+      <ul class="list" data-bind="foreach: locations">
+        <li data-bind="text: title, click: $parent.setMarker.bind($data, $index())"></li>
+      </ul>
     </div>
+
+
+    <div id="main">
+      <span class="open" onclick="openNav()">&#9776; open</span>
+      <div id="map"></div>
+
+    </div>
+
     <script src="js/lib/jquery.min.js"></script>
     <script src="js/lib/knockout-3.2.0.js"></script>
     <script src="js/app.js"></script>
     <script async defer
      src="https://maps.googleapis.com/maps/api/js?libraries=places,drawing,geometry&key=AIzaSyClAt5xhwZuJPnyne-RPxXOJPIgu1Hme_o&v=3&callback=viewModel.init">
-    </script> <!-- Google Map API. Callback function initMap found in js/app.js -->
+    </script>
+    <!-- Google Map API. Callback function initMap found in js/app.js -->
   </body>
 </html>

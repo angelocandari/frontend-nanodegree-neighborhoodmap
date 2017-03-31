@@ -4,7 +4,7 @@ var model = { //All of my point of interests in New Zealand vacation spots.
   locationsData: [
     {
       title: "Wellington",
-      location: {lat:  -41.28646, lng: 174.776236},
+      location: {lat: -41.28646, lng: 174.776236},
       visible: true
     },
     {
@@ -58,22 +58,22 @@ var model = { //All of my point of interests in New Zealand vacation spots.
 var viewModel = { //viewModel is the command center between model and view.
   init: function() { //initial state of viewModel
     for (var i = 0; i < model.locationsData.length; i++) {
-      this.locations.push(model.locationsData[i]);
+      viewModel.locations.push(model.locationsData[i]);
     }
-    this.currentQuery.subscribe(this.search); //Invokes search.
+    viewModel.currentQuery.subscribe(viewModel.search); //Invokes search.
     mapView.init();
   },
-  currentQuery: ko.observable(''), //notifies list to update.
-  locations: ko.observableArray([]),  //Creates an observableArray data-bound.
+  currentQuery: ko.observable(""), //notifies list to update.
+  locations: ko.observableArray([]), //Creates an observableArray data-bound.
   createMarkers: function() { //Creates each Markers.
-    var defaultIcon = this.makeMarkerIcon("0091ff"); //Default colot of the icon.
+    var defaultIcon = viewModel.makeMarkerIcon("0091ff"); //Default colot of the icon.
     var bounds = new google.maps.LatLngBounds(); //Let's us access the bounds f.
-    var infoWindow = new google.maps.InfoWindow(); //Creates an instance.
-    this.infoWindow = infoWindow; //Adds infoWindow as a property of viewModel
-    for (var i = 0; i < model.locationsData.length; i++) {
-      var position = model.locationsData[i].location; //LatLng coordinates.
-      var title = model.locationsData[i].title; //Name of each location.
-      var visible = model.locationsData[i].visible;
+    viewModel.infoWindow = new google.maps.InfoWindow(); //Creates an instance.
+    var places = model.locationsData;
+    for (var i = 0; i < places.length; i++) {
+      var position = places[i].location; //LatLng coordinates.
+      var title = places[i].title; //Name of each location.
+      var visible = places[i].visible;
       var marker = new google.maps.Marker({ //New marker instance.
         map: model.map, //Sets the map to be used.
         position: position, //Sets the coordinates.
@@ -103,10 +103,11 @@ var viewModel = { //viewModel is the command center between model and view.
     }
   },
   search: function(value) { //initiates search using currentQuery.
+    var places = model.locationsData;
     viewModel.locations.removeAll(); //Removes all items on locations.
-    for (var i = 0; i < model.locationsData.length; i++) {
-      if (model.locationsData[i].title.toLowerCase().indexOf(value.toLowerCase()) >=0) {
-        viewModel.locations.push(model.locationsData[i]);
+    for (var i = 0; i < places.length; i++) {
+      if (places[i].title.toLowerCase().indexOf(value.toLowerCase()) >=0) {
+        viewModel.locations.push(places[i]);
           model.markers[i].visible = true;
         } else {
           model.markers[i].visible = false;
@@ -120,11 +121,12 @@ var viewModel = { //viewModel is the command center between model and view.
     viewModel.populateInfoWindow(currentMarker, viewModel.infoWindow);
   },
   setAllMap: function () { //Hides Markers not part of the current search query
-    for (var i = 0; i < model.markers.length; i++) {
-      if (model.markers[i].visible === false) {
-        model.markers[i].setMap(null);
+    var markers = model.markers;
+    for (var i = 0; i < markers.length; i++) {
+      if (markers[i].visible === false) {
+        markers[i].setMap(null);
       } else {
-        model.markers[i].setMap(model.map);
+        markers[i].setMap(model.map);
       }
     }
   },
@@ -137,7 +139,6 @@ var viewModel = { //viewModel is the command center between model and view.
       new google.maps.Point(10,34),
       new google.maps.Size(21,34)
     )
-
     return markerImage;
   },
   populateInfoWindow: function (marker, infoWindow) { //Creates the infoWindow.
@@ -172,13 +173,26 @@ var viewModel = { //viewModel is the command center between model and view.
   }
 };
 
+function openNav() {
+  document.getElementById("drawer").style.width = "250px";
+  document.getElementById("main").style.marginLeft = "250px";
+}
+
+function closeNav() {
+  document.getElementById("drawer").style.width = "0";
+  document.getElementById("main").style.marginLeft = "0";
+
+}
+
+
 var mapView = { //mapView
   init: function() {
     var originalCenter = model.locationsData[0].location;
     model.map = new google.maps.Map(document.getElementById('map'), {
       center: {lat: -40.900557, lng: 174.885971}, // Centers at New Zealand.
       zoom: 8, //Default zoom.
-      center: originalCenter //Centers to the first item on my locationsData
+      center: originalCenter, //Centers to the first item on my locationsData
+      mapTypeControl: false
     })
     this.render();
   },

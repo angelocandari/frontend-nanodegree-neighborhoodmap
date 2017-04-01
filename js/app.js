@@ -48,15 +48,6 @@ var viewModel = { //viewModel is the command center between model and view.
       viewModel.locations.push(model.locationsData[i]);
     }
     viewModel.currentQuery.subscribe(viewModel.search); //Invokes search.
-
-    setTimeout(function() { //alerts user that map did not load.
-      if (!window.google || !window.google.maps) {
-        $("#error").text("Failed to load Map");
-        alert("Failed to load Map");
-      }
-    }, 3000);
-
-
   },
   currentQuery: ko.observable(""), //notifies list to update.
   locations: ko.observableArray([]), //Creates an observableArray data-bound.
@@ -133,7 +124,7 @@ var viewModel = { //viewModel is the command center between model and view.
       new google.maps.Point(0,0),
       new google.maps.Point(10,34),
       new google.maps.Size(21,34)
-    )
+    );
     return markerImage;
   },
   populateInfoWindow: function (marker, infoWindow) { //Creates the infoWindow.
@@ -144,10 +135,8 @@ var viewModel = { //viewModel is the command center between model and view.
       var markerLat = marker.getPosition().lat();
       var markerLng = marker.getPosition().lng();
       var markerCoor = markerLat + "," + markerLng;
-      var wikiUrl = 'http://en.wikipedia.org/w/api.php?action=opensearch&search='
-      + titleMark + '&format=json&callback=wikiCallback';
-      var streetView = "http://maps.googleapis.com/maps/api/streetview?size=600x300&location="
-      + markerCoor;
+      var wikiUrl = 'http://en.wikipedia.org/w/api.php?action=opensearch&search=' + titleMark + '&format=json&callback=wikiCallback';
+      var streetView = "http://maps.googleapis.com/maps/api/streetview?size=600x300&location=" + markerCoor;
       var wikiTimeout = setTimeout(function(){
         $errorHandler.text("Failed to load Resources");
         alert("Failed to load Resources");
@@ -159,10 +148,10 @@ var viewModel = { //viewModel is the command center between model and view.
         success: function(response) {
           var contentMark;
           if (response[2][0] === "") {
-            contentMark = response[2][1]
+            contentMark = response[2][1];
           } else {
-            contentMark = response[2][0]
-          };
+            contentMark = response[2][0];
+          }
           infoWindow.setContent(
             "<div>" +
             "<h2>" + titleMark + "</h2>" +
@@ -173,7 +162,7 @@ var viewModel = { //viewModel is the command center between model and view.
             infoWindow.open(model.map, marker); //Opens the marker.
             infoWindow.addListener("closeclick", function(){ //Listener to close info.
               infoWindow.close(); //closes infoWindow.
-          })
+          });
           clearTimeout(wikiTimeout);
 
         }
@@ -203,12 +192,15 @@ var viewModel = { //viewModel is the command center between model and view.
   initMap: function() {
     var originalCenter = model.locationsData[0].location;
     model.map = new google.maps.Map(document.getElementById('map'), {
-      center: {lat: -40.900557, lng: 174.885971}, // Centers at New Zealand.
       zoom: 8, //Default zoom.
       center: originalCenter, //Centers to the first item on my locationsData
       mapTypeControl: false
-    })
+    });
     viewModel.createMarkers();
+  },
+
+  mapError: function() { //Notifies user if Map has been loaded.
+    alert("Map not Loaded");
   }
 };
 

@@ -48,8 +48,14 @@ var viewModel = { //viewModel is the command center between model and view.
       viewModel.locations.push(model.locationsData[i]);
     }
     viewModel.currentQuery.subscribe(viewModel.search); //Invokes search.
-    viewModel.initMap();
-    viewModel.createMarkers();
+
+    setTimeout(function() { //alerts user that map did not load.
+      if (!window.google || !window.google.maps) {
+        $("#error").text("Failed to load Map");
+        alert("Failed to load Map");
+      }
+    }, 3000);
+
 
   },
   currentQuery: ko.observable(""), //notifies list to update.
@@ -145,7 +151,6 @@ var viewModel = { //viewModel is the command center between model and view.
       var wikiTimeout = setTimeout(function(){
         $errorHandler.text("Failed to load Resources");
         alert("Failed to load Resources");
-
       }, 8000);
 
       $.ajax({
@@ -194,6 +199,7 @@ var viewModel = { //viewModel is the command center between model and view.
       google.maps.event.trigger(model.map, 'resize');
     }, 700);
   },
+
   initMap: function() {
     var originalCenter = model.locationsData[0].location;
     model.map = new google.maps.Map(document.getElementById('map'), {
@@ -202,11 +208,9 @@ var viewModel = { //viewModel is the command center between model and view.
       center: originalCenter, //Centers to the first item on my locationsData
       mapTypeControl: false
     })
-  },
-  errHandle: function() {
-    var message = document.getElementById("error").innerHTML;
-    message = "err.message";
+    viewModel.createMarkers();
   }
 };
 
+viewModel.init(); //Initiates viewModel.
 ko.applyBindings(viewModel);

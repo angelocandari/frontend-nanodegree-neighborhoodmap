@@ -7,6 +7,10 @@ as my point of interests because I am planning to have a vacation there one
 of these days.
 
 ### Getting Started
+**Launching the App.** Testing the map on localhost will not work properly.
+Open the index.html file natively from the folder where the project is located.
+Make sure the you are connected to the internet.
+
 **Prepare your files.** I have prepared a standard file folder setup where I
 separate my files according to js, css, img on their own respective folders.
 
@@ -199,13 +203,18 @@ setMarker: function(id) {
 },
 ```
 
-**Added OffCanvas Menu.** Placed my list on an OffCanvasmenu. w3schools has a great and simple tutorial [here](https://www.w3schools.com/howto/howto_js_off-canvas.asp).
+**Added OffCanvas Menu.** Placed my list on an OffCanvasmenu. w3schools has a
+great and simple tutorial [here](https://www.w3schools.com/howto/howto_js_off-canvas.asp).
 
 
 **Infowindow Content Reference.** Added Streetview images and Wikipedia Content
  on the corresponding places on Infowindow.
 
-**Error Handling.** Since I am using JSONP to get wikipedia searches and streetview images to populate infowindows, conventional error handlers would not be an option. As a work around, I have implemented setTimeout function on my ajax request. If a GET requests fails, an alert and a message will notify the user that something has gone wrong.
+**Error Handling.** Since I am using JSONP to get wikipedia searches, google
+maps and streetview images to populate infowindows, conventional error handlers
+would not be an option. As a work around, I have implemented setTimeout function
+on my ajax request. If a GET requests fails, an alert and a message will notify
+the user that something has gone wrong.
 
 ```javascript
 var wikiTimeout = setTimeout(function(){

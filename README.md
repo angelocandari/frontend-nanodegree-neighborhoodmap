@@ -7,9 +7,7 @@ as my point of interests because I am planning to have a vacation there one
 of these days.
 
 ### Getting Started
-**Launching the App.** Testing the map on localhost will not work properly.
-Open the index.html file natively from the folder where the project is located.
-Make sure the you are connected to the internet.
+**Launching the App.** Go here to launch the website. https://angelocandari.github.io/fed-neighborhoodmap/
 
 **Prepare your files.** I have prepared a standard file folder setup where I
 separate my files according to js, css, img on their own respective folders.
